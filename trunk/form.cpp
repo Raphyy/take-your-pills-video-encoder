@@ -7,8 +7,8 @@
 //============================================================================
 
 
-#define LINUX
-//#define WINDOWS
+//#define LINUX
+#define WINDOWS
 
 
 #include <QObject>
