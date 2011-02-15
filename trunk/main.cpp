@@ -17,6 +17,6 @@ int main(int argc,char *argv[])
 	QApplication mainApplication(argc,argv);
 	form mainForm;
 	mainForm.show();
-	mainForm.setWindowIcon(QIcon("logo.png"));
+	mainForm.setWindowIcon(QIcon("icon.png"));
 	return mainApplication.exec();
 }
