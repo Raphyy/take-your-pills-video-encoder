@@ -23,6 +23,10 @@
 #include "tinyxml.h"
 #include "form.h"
 
+#ifdef WINDOWS
+	#include "windows.h"
+	#include "shellapi.h"
+#endif
 
 const std::string filenameCommands = ("commands.xml");
 const std::string tagInternalFFmpegRun = ("{internal.ffmpeg.run}");
