@@ -23,10 +23,6 @@
 #include "tinyxml.h"
 #include "form.h"
 
-#ifdef WINDOWS
-	#include "windows.h"
-	#include "shellapi.h"
-#endif
 
 const std::string filenameCommands = ("commands.xml");
 const std::string tagInternalFFmpegRun = ("{internal.ffmpeg.run}");
@@ -256,9 +252,8 @@ void form::encodeVideo()
 						currentCommand ++;
 						tempCommand = commandsEncode.commandsSd[i].commandline;
 						generateCommand(&tempCommand,pathApp,pathInfile,basename,timePreview,idSd);
-						std::cout << tempCommand << std::endl;
+						//std::cout << tempCommand.c_str() << std::endl;
 						commandResultCurrent = system(tempCommand.c_str());
-						system("pause");
 						commandResultSdOk = commandResultSdOk && (commandResultCurrent==0);
 						progressbarEncode->setValue(getPercentage(i+1,nbrCommands));
 					}
@@ -271,9 +266,8 @@ void form::encodeVideo()
 							currentCommand ++;
 							tempCommand = commandsEncode.commandsHd[i].commandline;
 							generateCommand(&tempCommand, pathApp, pathInfile, basename, timePreview, idHd);
-							std::cout << tempCommand << std::endl;
+							//std::cout << tempCommand << std::endl;
 							commandResultCurrent = system(tempCommand.c_str());
-							system("pause");
 							commandResultHdOk = commandResultHdOk && (commandResultCurrent==0);
 							progressbarEncode->setValue(getPercentage(i + 1, nbrCommands));
 						}
@@ -287,9 +281,8 @@ void form::encodeVideo()
 							currentCommand ++;
 							tempCommand = commandsEncode.commandsPv[i].commandline;
 							generateCommand(&tempCommand, pathApp, pathInfile, basename, timePreview, idPv);
-							std::cout << tempCommand << std::endl;
+							//std::cout << tempCommand << std::endl;
 							commandResultCurrent = system(tempCommand.c_str());
-							system("pause"); 
 							commandResultPvOk = commandResultPvOk && (commandResultCurrent==0);
 							progressbarEncode->setValue(getPercentage(i + 1, nbrCommands));
 						}
@@ -423,6 +416,10 @@ void generateCommand(std::string *command,
 		command->replace(found, tagUserTime.size(), temp);
 		found = command->find(tagUserTime, found + temp.size());
 	}
+
+	#ifdef WINDOWS
+		*command = "\" " + *command + " \"";
+	#endif
 }
 
 
@@ -440,6 +437,15 @@ std::string checkPath (std::string path)
 	}
 #endif
 #ifdef WINDOWS
+	size_t found;
+	std::string charToFind = "/";
+	std::string charReplace = "\\";
+	found = path.find(charToFind);
+	while (found != std::string::npos)
+	{
+		path.replace(found, charToFind.size(), charReplace);
+		found = path.find(charToFind, found + charReplace.size());
+	}
 	path = "\"" + path + "\"";
 #endif
 	return path;
