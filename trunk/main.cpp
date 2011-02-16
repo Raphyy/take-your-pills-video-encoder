@@ -1,7 +1,7 @@
 //============================================================================
 // Name        : Take Your Pills Video Encoder
 // Author      : Raphaël GUILLORY
-// Version     : alpha
+// Version     : Beta
 // Copyright   : Please contact raphael.guillory@gmail.com
 // Description : Video encoder for Take Your Pills
 //============================================================================
