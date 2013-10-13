@@ -10,6 +10,7 @@
 #define	_MAINFORM_H
 
 
+#include <QUrl>
 #include <vector>
 #include <string>
 #include "ui_mainForm.h"
@@ -43,9 +44,9 @@ class mainForm : public QDialog
     public slots:
         void openFile();
         void displayHelp();
-        void encodeVideo();
         void updateGUIPreview(int);
         void updateGUIUserDefinedVideo(int);
+        void encodeVideo();
     
     private:
         Ui::mainForm widget;
@@ -64,6 +65,7 @@ class mainForm : public QDialog
         int intUserResizeBitrateTolerance;
         double timeUserCutTimeStart;
         double timeUserCutTimeStop;
+        QUrl urlUpload;
 };
 
 
