@@ -28,6 +28,10 @@
   <property name="windowTitle">
    <string>Take Your Pills Video Encoder</string>
   </property>
+  <property name="windowIcon">
+   <iconset>
+    <normaloff>icon.png</normaloff>icon.png</iconset>
+  </property>
   <widget class="QPushButton" name="pushbuttonEncode">
    <property name="geometry">
     <rect>
