@@ -17,6 +17,7 @@
 #include <QMessageBox>
 #include <QString>
 #include <QTime>
+#include <QDesktopServices>
 #include <iostream>
 #include <sstream>
 #include <string>
@@ -230,11 +231,14 @@ void mainForm::encodeVideo()
 
         else
         {
-            // TODO: Read a new XML element : <upload url>
-            // TODO: Update config.xml  : add <upload url>
             TiXmlElement *xmlRoot, *xmlCommand, *xmlSoftware, *xmlArgument;
 
-            xmlRoot = xmlFile.FirstChildElement("commands");
+            xmlRoot = xmlFile.FirstChildElement("uploadurl");
+            urlUpload = QUrl(QString(xmlRoot->GetText()), QUrl::TolerantMode);
+            addNewLineInLog(LogFile);
+            LogFile << "   Upload URL loaded : " << urlUpload.toString().toStdString() << "\n";
+            
+            xmlRoot = xmlRoot->NextSiblingElement("commands");
 
             // Detect error in finding first element in XML file
             if (!xmlRoot)
@@ -383,9 +387,16 @@ void mainForm::encodeVideo()
                 if (!joblistExitStatus)
                     QMessageBox::critical(this, "Error", "Something went wrong while encoding.\nCheck the log file to know which command failed.");
                 else
-                    QMessageBox::information(this, "Information", "Job done ! You can upload generated video files.");
-
-                // TODO: Add a button to open firefox/chrome/IE/Opera to takeyourpills.fr/wp-admin
+                {
+                    if (urlUpload.isEmpty())
+                        QMessageBox::information(this, "Information", "Job done ! You can upload generated video files.");
+                    else
+                    {
+                        QMessageBox::StandardButton reply = QMessageBox::question(this, "Question", "Job done ! Do you want to upload generated file(s) ?", QMessageBox::Yes|QMessageBox::No);
+                        if (reply == QMessageBox::Yes)
+                            QDesktopServices::openUrl(urlUpload);
+                    }
+                }
 
                 // Reinitialize form
                 widget.progressbarEncode->setVisible(false);
