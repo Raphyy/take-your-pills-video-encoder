@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>311</width>
-    <height>573</height>
+    <height>571</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -18,8 +18,14 @@
   </property>
   <property name="minimumSize">
    <size>
-    <width>0</width>
-    <height>0</height>
+    <width>311</width>
+    <height>571</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>311</width>
+    <height>571</height>
    </size>
   </property>
   <property name="cursor">
@@ -30,7 +36,7 @@
   </property>
   <property name="windowIcon">
    <iconset>
-    <normaloff>icon.png</normaloff>icon.png</iconset>
+    <normaloff>icon.ico</normaloff>icon.ico</iconset>
   </property>
   <widget class="QProgressBar" name="progressbarEncode">
    <property name="enabled">
@@ -197,6 +203,9 @@
    </widget>
   </widget>
   <widget class="QGroupBox" name="groupboxSetupPreview">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="geometry">
     <rect>
      <x>20</x>
@@ -242,6 +251,9 @@
     <property name="alignment">
      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
     </property>
+    <property name="decimals">
+     <number>3</number>
+    </property>
     <property name="maximum">
      <double>99999.990000000005239</double>
     </property>
@@ -277,6 +289,9 @@
    </widget>
   </widget>
   <widget class="QGroupBox" name="groupboxSetupUserDefined">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="geometry">
     <rect>
      <x>20</x>
@@ -421,6 +436,9 @@
    </widget>
   </widget>
   <widget class="QPushButton" name="pushbuttonEncode">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="geometry">
     <rect>
      <x>180</x>
