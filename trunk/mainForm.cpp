@@ -11,17 +11,12 @@
 
 
 #include <fstream>
-#include <iostream>
 #include <QProcess>
 #include <QFileDialog>
 #include <QMessageBox>
 #include <QString>
 #include <QTime>
 #include <QDesktopServices>
-#include <iostream>
-#include <sstream>
-#include <string>
-#include <algorithm>
 #include "mainForm.h"
 #include "tinyxml.h"
 
@@ -67,14 +62,26 @@ mainForm::mainForm()
 {
     widget.setupUi(this);
     
+    // Create the preview form
+    preview = new previewForm;
+    preview->setModal(true);
+    
     // Link actions
     QObject::connect(widget.toolbuttonUserFileInput,SIGNAL(clicked()),this,SLOT(openFile()));
     QObject::connect(widget.toolbuttonBasename,SIGNAL(clicked()),this,SLOT(displayHelp()));
+    QObject::connect(widget.toolbuttonUserPreviewTime,SIGNAL(clicked()),this,SLOT(openPreviewForm()));
+    QObject::connect(this, SIGNAL(sendPath(QString)), preview, SLOT(receivePath(QString)));
+    QObject::connect(preview, SIGNAL(sendTime(double)), this, SLOT(receiveTime(double)));
     QObject::connect(widget.pushbuttonEncode,SIGNAL(clicked()),this,SLOT(encodeVideo()));
-    QObject::connect(widget.checkboxPreview,SIGNAL(stateChanged(int)),this,SLOT(updateGUIPreview(int)));
-    QObject::connect(widget.checkboxUserDefined,SIGNAL(stateChanged(int)),this,SLOT(updateGUIUserDefinedVideo(int)));
+    QObject::connect(widget.checkboxPreview,SIGNAL(stateChanged(int)),this,SLOT(enablePreviewGroupbox(int)));
+    QObject::connect(widget.checkboxUserDefined,SIGNAL(stateChanged(int)),this,SLOT(enableUserDefinedVideoGroupbox(int)));
+    QObject::connect(widget.checkboxPreview,SIGNAL(stateChanged(int)),this,SLOT(enableEncodeButton(int)));
+    QObject::connect(widget.checkbox360,SIGNAL(stateChanged(int)),this,SLOT(enableEncodeButton(int)));
+    QObject::connect(widget.checkbox720,SIGNAL(stateChanged(int)),this,SLOT(enableEncodeButton(int)));
+    QObject::connect(widget.checkbox1080,SIGNAL(stateChanged(int)),this,SLOT(enableEncodeButton(int)));
+    QObject::connect(widget.checkboxUserDefined,SIGNAL(stateChanged(int)),this,SLOT(enableEncodeButton(int)));
 }
-    
+
 
 mainForm::~mainForm()
 {
@@ -96,7 +103,17 @@ void mainForm::displayHelp()
 }
 
 
-// TODO: Implement video display to select the preview
+void mainForm::openPreviewForm()
+{
+    emit sendPath(widget.lineeditUserFileInput->text());
+	preview->exec();
+}
+
+
+void mainForm::receiveTime(double timePreview)
+{
+    widget.doublespinboxUserPreviewTime->setValue(timePreview);
+}
 
 
 void mainForm::encodeVideo()
@@ -147,7 +164,7 @@ void mainForm::encodeVideo()
     bool boolFormIsOk = true;
     
     
-    // TODO: Ask Devon for accurate translations
+    // TODO: Ask Devon for accurate translations : config.xml, previousrun.log, GUI and message box
     
     
 	// Check if a file has been selected
@@ -423,13 +440,15 @@ void mainForm::encodeVideo()
                 widget.checkbox720->setEnabled(true);
                 widget.checkbox1080->setEnabled(true);
                 widget.checkboxUserDefined->setEnabled(true);
+                widget.groupboxSetupPreview->setEnabled(false);
                 widget.doublespinboxUserPreviewTime->setEnabled(false);
                 widget.toolbuttonUserPreviewTime->setEnabled(false);
+                widget.groupboxSetupUserDefined->setEnabled(false);
                 widget.spinboxUserResizeResolutionX->setEnabled(false);
                 widget.spinboxUserResizeResolutionY->setEnabled(false);
                 widget.doublespinboxUserCutTimeStart->setEnabled(false);
                 widget.doublespinboxUserCutTimeStop->setEnabled(false);
-                widget.pushbuttonEncode->setEnabled(true);
+                widget.pushbuttonEncode->setEnabled(false);
 
                 // Easy ...
                 LogFile.close();
@@ -439,25 +458,28 @@ void mainForm::encodeVideo()
 }
 
 
-void mainForm::updateGUIPreview(int checkboxState)
+void mainForm::enablePreviewGroupbox(int checkboxState)
 {
     if (checkboxState == Qt::Checked)
     {
+        widget.groupboxSetupPreview->setEnabled(true);
         widget.doublespinboxUserPreviewTime->setEnabled(true);
         widget.toolbuttonUserPreviewTime->setEnabled(true);
     }
     else
     {
+        widget.groupboxSetupPreview->setEnabled(false);
         widget.doublespinboxUserPreviewTime->setEnabled(false);
         widget.toolbuttonUserPreviewTime->setEnabled(false);
     }
 }
 
 
-void mainForm::updateGUIUserDefinedVideo(int checkboxState)
+void mainForm::enableUserDefinedVideoGroupbox(int checkboxState)
 {
     if (checkboxState == Qt::Checked)
     {
+        widget.groupboxSetupUserDefined->setEnabled(true);
         widget.spinboxUserResizeResolutionX->setEnabled(true);
         widget.spinboxUserResizeResolutionY->setEnabled(true);
         widget.doublespinboxUserCutTimeStart->setEnabled(true);
@@ -465,11 +487,27 @@ void mainForm::updateGUIUserDefinedVideo(int checkboxState)
     }
     else
     {
+        widget.groupboxSetupUserDefined->setEnabled(false);
         widget.spinboxUserResizeResolutionX->setEnabled(false);
         widget.spinboxUserResizeResolutionY->setEnabled(false);
         widget.doublespinboxUserCutTimeStart->setEnabled(false);
         widget.doublespinboxUserCutTimeStop->setEnabled(false);
     }
+}
+
+
+void mainForm::enableEncodeButton(int)
+{
+    if (widget.checkboxPreview->isChecked() ||
+        widget.checkbox360->isChecked() ||
+        widget.checkbox720->isChecked() ||
+        widget.checkbox1080->isChecked() ||
+        widget.checkboxUserDefined->isChecked())
+    {
+        widget.pushbuttonEncode->setEnabled(true);
+    }
+    else
+        widget.pushbuttonEncode->setEnabled(false);
 }
 
 

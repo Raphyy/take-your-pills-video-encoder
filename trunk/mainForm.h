@@ -12,8 +12,8 @@
 
 #include <QUrl>
 #include <vector>
-#include <string>
 #include "ui_mainForm.h"
+#include "previewForm.h"
 
 
 class command
@@ -44,12 +44,19 @@ class mainForm : public QDialog
     public slots:
         void openFile();
         void displayHelp();
-        void updateGUIPreview(int);
-        void updateGUIUserDefinedVideo(int);
+        void openPreviewForm();
+        void receiveTime(double);
+        void enablePreviewGroupbox(int);
+        void enableUserDefinedVideoGroupbox(int);
+        void enableEncodeButton(int);
         void encodeVideo();
+        
+    signals:
+        void sendPath(QString);
     
     private:
         Ui::mainForm widget;
+        previewForm* preview;
         QString pathApp;
         QString pathUserFileInput;
     	QString basename;
