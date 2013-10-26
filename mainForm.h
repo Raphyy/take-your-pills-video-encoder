@@ -55,6 +55,7 @@ class mainForm : public QDialog
         void sendPath(QString);
     
     private:
+        void reinitializeForm();
         Ui::mainForm widget;
         previewForm* preview;
         QString pathApp;
@@ -74,9 +75,6 @@ class mainForm : public QDialog
         double timeUserCutTimeStop;
         QUrl urlUpload;
 };
-
-
-std::string getPath(std::string);
 
 
 void generateCommand(command *,
