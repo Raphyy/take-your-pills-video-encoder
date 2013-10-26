@@ -25,7 +25,7 @@ previewForm::previewForm()
     QObject::connect(widget.pushbuttonPlay,SIGNAL(clicked()),this,SLOT(play()));
     QObject::connect(widget.pushbuttonPause,SIGNAL(clicked()),this,SLOT(pause()));
     QObject::connect(widget.pushbuttonStop,SIGNAL(clicked()),this,SLOT(stop()));
-    QObject::connect(widget.phononVideoPlayer, SIGNAL(finished()),widget.phononVideoPlayer, SLOT(stop()));
+    QObject::connect(widget.phononVideoPlayer, SIGNAL(finished()),this, SLOT(stop()));
     QObject::connect(widget.pushbuttonPreviousFrame,SIGNAL(clicked()),this,SLOT(jumptoPreviousFrame()));
     QObject::connect(widget.pushbuttonNextFrame,SIGNAL(clicked()),this,SLOT(jumptoNextFrame()));
     QObject::connect(widget.pushbuttonPreviousStep,SIGNAL(clicked()),this,SLOT(jumptoPreviousStep()));
