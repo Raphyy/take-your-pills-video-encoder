@@ -13,7 +13,7 @@
 int main(int argc,char *argv[])
 {
 	QApplication mainApplication(argc,argv);
-	mainForm form;
+    mainForm form;
 	form.show();
 	return mainApplication.exec();
 }

@@ -37,7 +37,6 @@ class previewForm : public QDialog
         
     private:
         Ui::previewForm widget;
-        QPixmap *pixmapTakeYourPillsLogo;
         Phonon::MediaObject *mdobjVideo;
 };
 

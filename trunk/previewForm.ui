@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>640</width>
-    <height>432</height>
+    <height>436</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -19,82 +19,169 @@
   <property name="minimumSize">
    <size>
     <width>640</width>
-    <height>432</height>
+    <height>436</height>
    </size>
   </property>
   <property name="maximumSize">
    <size>
     <width>640</width>
-    <height>432</height>
+    <height>436</height>
    </size>
   </property>
   <property name="windowTitle">
-   <string>Select the preview</string>
+   <string>Select a preview</string>
   </property>
   <property name="windowIcon">
-   <iconset>
-    <normaloff>icon.ico</normaloff>icon.ico</iconset>
+   <iconset resource="Take_Your_Pills_Video_Encoder_images.qrc">
+    <normaloff>:/images/icon.png</normaloff>:/images/icon.png</iconset>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">font: 12pt &quot;Sawasdee&quot;;</string>
   </property>
   <widget class="QPushButton" name="pushbuttonStop">
    <property name="geometry">
     <rect>
-     <x>370</x>
-     <y>400</y>
-     <width>75</width>
-     <height>23</height>
+     <x>144</x>
+     <y>385</y>
+     <width>47</width>
+     <height>36</height>
     </rect>
    </property>
+   <property name="styleSheet">
+    <string notr="true">QPushButton
+{
+	border: 0px;
+	color: rgb(255, 255, 255);
+	background-image: url(:/images/previewStopNormal.png);
+}
+
+QPushButton:hover
+{
+	background-image: url(:/images/previewStopHover.png);
+}
+
+QPushButton:pressed
+{
+	background-image: url(:/images/previewStopPressed.png);
+}</string>
+   </property>
    <property name="text">
-    <string>Stop</string>
+    <string/>
    </property>
   </widget>
   <widget class="QPushButton" name="pushbuttonPreviousStep">
    <property name="geometry">
     <rect>
-     <x>100</x>
-     <y>400</y>
-     <width>31</width>
-     <height>23</height>
+     <x>206</x>
+     <y>385</y>
+     <width>47</width>
+     <height>36</height>
     </rect>
    </property>
+   <property name="styleSheet">
+    <string notr="true">QPushButton
+{
+	border: 0px;
+	color: rgb(255, 255, 255);
+	background-image: url(:/images/previewPreviousStepNormal.png);
+}
+
+QPushButton:hover
+{
+	background-image: url(:/images/previewPreviousStepHover.png);
+}
+
+QPushButton:pressed
+{
+	background-image: url(:/images/previewPreviousStepPressed.png);
+}</string>
+   </property>
    <property name="text">
-    <string>-5</string>
+    <string/>
    </property>
   </widget>
   <widget class="QPushButton" name="pushbuttonPreviousFrame">
    <property name="geometry">
     <rect>
-     <x>10</x>
-     <y>400</y>
-     <width>31</width>
-     <height>23</height>
+     <x>315</x>
+     <y>385</y>
+     <width>47</width>
+     <height>36</height>
     </rect>
    </property>
+   <property name="styleSheet">
+    <string notr="true">QPushButton
+{
+	border: 0px;
+	color: rgb(255, 255, 255);
+	background-image: url(:/images/previewPreviousFrameNormal.png);
+}
+
+QPushButton:hover
+{
+	background-image: url(:/images/previewPreviousFrameHover.png);
+}
+
+QPushButton:pressed
+{
+	background-image: url(:/images/previewPreviousFramePressed.png);
+}</string>
+   </property>
    <property name="text">
-    <string>- 1</string>
+    <string/>
    </property>
   </widget>
   <widget class="QPushButton" name="pushbuttonPause">
    <property name="geometry">
     <rect>
-     <x>280</x>
-     <y>400</y>
-     <width>75</width>
-     <height>23</height>
+     <x>82</x>
+     <y>385</y>
+     <width>47</width>
+     <height>36</height>
     </rect>
    </property>
+   <property name="styleSheet">
+    <string notr="true">QPushButton
+{
+	border: 0px;
+	color: rgb(255, 255, 255);
+	background-image: url(:/images/previewPauseNormal.png);
+}
+
+QPushButton:hover
+{
+	background-image: url(:/images/previewPauseHover.png);
+}
+
+QPushButton:pressed
+{
+	background-image: url(:/images/previewPausePressed.png);
+}</string>
+   </property>
    <property name="text">
-    <string>Pause</string>
+    <string/>
    </property>
   </widget>
   <widget class="Phonon::SeekSlider" name="phononSeekSlider">
    <property name="geometry">
     <rect>
-     <x>10</x>
-     <y>370</y>
-     <width>621</width>
-     <height>19</height>
+     <x>0</x>
+     <y>360</y>
+     <width>640</width>
+     <height>10</height>
     </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QSlider::handle:horizontal
+{
+	width: 20px;
+	background-image: url(:/images/previewSeekSliderHandle.png);
+}
+
+QSlider::groove:horizontal
+{
+	background-image: url(:/images/previewSeekSliderBar.png);
+}</string>
    </property>
    <property name="iconVisible">
     <bool>false</bool>
@@ -119,53 +206,125 @@
   <widget class="QPushButton" name="pushbuttonNextStep">
    <property name="geometry">
     <rect>
-     <x>140</x>
-     <y>400</y>
-     <width>31</width>
-     <height>23</height>
+     <x>253</x>
+     <y>385</y>
+     <width>47</width>
+     <height>36</height>
     </rect>
    </property>
+   <property name="styleSheet">
+    <string notr="true">QPushButton
+{
+	border: 0px;
+	color: rgb(255, 255, 255);
+	background-image: url(:/images/previewNextStepNormal.png);
+}
+
+QPushButton:hover
+{
+	background-image: url(:/images/previewNextStepHover.png);
+}
+
+QPushButton:pressed
+{
+	background-image: url(:/images/previewNextStepPressed.png);
+}</string>
+   </property>
    <property name="text">
-    <string>+ 5</string>
+    <string/>
    </property>
   </widget>
   <widget class="QPushButton" name="pushbuttonPlay">
    <property name="geometry">
     <rect>
-     <x>190</x>
-     <y>400</y>
-     <width>75</width>
-     <height>23</height>
+     <x>20</x>
+     <y>385</y>
+     <width>47</width>
+     <height>36</height>
     </rect>
    </property>
+   <property name="styleSheet">
+    <string notr="true">QPushButton
+{
+	border: 0px;
+	color: rgb(255, 255, 255);
+	background-image: url(:/images/previewPlayNormal.png);
+}
+
+QPushButton:hover
+{
+	background-image: url(:/images/previewPlayHover.png);
+}
+
+QPushButton:pressed
+{
+	background-image: url(:/images/previewPlayPressed.png);
+}</string>
+   </property>
    <property name="text">
-    <string>Play</string>
+    <string/>
    </property>
   </widget>
   <widget class="QPushButton" name="pushbuttonNextFrame">
    <property name="geometry">
     <rect>
-     <x>50</x>
-     <y>400</y>
-     <width>31</width>
-     <height>23</height>
+     <x>362</x>
+     <y>385</y>
+     <width>47</width>
+     <height>36</height>
     </rect>
    </property>
+   <property name="styleSheet">
+    <string notr="true">QPushButton
+{
+	border: 0px;
+	color: rgb(255, 255, 255);
+	background-image: url(:/images/previewNextFrameNormal.png);
+}
+
+QPushButton:hover
+{
+	background-image: url(:/images/previewNextFrameHover.png);
+}
+
+QPushButton:pressed
+{
+	background-image: url(:/images/previewNextFramePressed.png);
+}</string>
+   </property>
    <property name="text">
-    <string>+ 1</string>
+    <string/>
    </property>
   </widget>
   <widget class="QPushButton" name="pushbuttonChoose">
    <property name="geometry">
     <rect>
-     <x>550</x>
-     <y>400</y>
-     <width>75</width>
-     <height>23</height>
+     <x>530</x>
+     <y>390</y>
+     <width>100</width>
+     <height>26</height>
     </rect>
    </property>
+   <property name="styleSheet">
+    <string notr="true">QPushButton
+{
+	border: 0px;
+	color: rgb(255, 255, 255);
+	background-image: url(:/images/previewButtonNormal.png);
+}
+
+QPushButton:hover
+{
+	background-image: url(:/images/previewButtonHover.png);
+}
+
+QPushButton:pressed
+{
+	background-image: url(:/images/previewButtonPressed.png);
+}</string>
+   </property>
    <property name="text">
-    <string>Choose</string>
+    <string>    Select</string>
    </property>
   </widget>
   <widget class="QLabel" name="labelTakeYourPillsLogo">
@@ -176,8 +335,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>641</width>
-     <height>361</height>
+     <width>640</width>
+     <height>360</height>
     </rect>
    </property>
    <property name="autoFillBackground">
@@ -193,7 +352,7 @@
     <string/>
    </property>
    <property name="pixmap">
-    <pixmap>logo.png</pixmap>
+    <pixmap resource="Take_Your_Pills_Video_Encoder_images.qrc">:/images/previewLogo.png</pixmap>
    </property>
    <property name="scaledContents">
     <bool>false</bool>
@@ -202,6 +361,38 @@
     <bool>false</bool>
    </property>
   </widget>
+  <widget class="QLabel" name="labelBackground">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>360</y>
+     <width>640</width>
+     <height>76</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QLabel
+{
+	
+	background-image: url(:/images/previewBackground.png);
+}</string>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <zorder>labelBackground</zorder>
+  <zorder>pushbuttonStop</zorder>
+  <zorder>pushbuttonPreviousStep</zorder>
+  <zorder>pushbuttonPreviousFrame</zorder>
+  <zorder>pushbuttonPause</zorder>
+  <zorder>phononSeekSlider</zorder>
+  <zorder>phononVideoPlayer</zorder>
+  <zorder>pushbuttonNextStep</zorder>
+  <zorder>pushbuttonPlay</zorder>
+  <zorder>pushbuttonNextFrame</zorder>
+  <zorder>pushbuttonChoose</zorder>
+  <zorder>labelTakeYourPillsLogo</zorder>
  </widget>
  <customwidgets>
   <customwidget>
@@ -215,6 +406,8 @@
    <header location="global">phonon/seekslider.h</header>
   </customwidget>
  </customwidgets>
- <resources/>
+ <resources>
+  <include location="Take_Your_Pills_Video_Encoder_images.qrc"/>
+ </resources>
  <connections/>
 </ui>
