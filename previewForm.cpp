@@ -15,7 +15,7 @@
 // Define constants to skip images and steps
 const int intFrameOffset = 50;
 const int intStepOffset = 300;
-const int intPreviewOffset = 40;
+const int intPreviewOffset = 35;
 
 
 previewForm::previewForm()
@@ -43,8 +43,6 @@ previewForm::~previewForm()
 
 void previewForm::receivePath(QString pathVideo)
 {
-    pixmapTakeYourPillsLogo = new QPixmap("images/logo.png");
-    widget.labelTakeYourPillsLogo->setPixmap(*pixmapTakeYourPillsLogo);
     mdobjVideo = new Phonon::MediaObject;
     mdobjVideo->setCurrentSource(QUrl(pathVideo));
     widget.phononSeekSlider->setMediaObject(widget.phononVideoPlayer->mediaObject());

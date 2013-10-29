@@ -43,12 +43,15 @@ const std::string idUser = "User";
 
 
 // Define CSS styles
-const QString cssLineEditOk = "QLineEdit{background: #FFFFFF;foreground-color: #000000;font-weight: regular;}";
-const QString cssLineEditError = "QLineEdit{background: #FF9090;foreground-color: #FFFFFF;font-weight: bold;}";
-const QString cssDoubleSpinBoxOk = "QDoubleSpinBox{background: #FFFFFF;foreground-color: #000000;font-weight: regular;}";
-const QString cssDoubleSpinBoxError = "QDoubleSpinBox{background: #FF9090;foreground-color: #FFFFFF;font-weight: bold;}";
-const QString cssSpinBoxOk = "QSpinBox{background: #FFFFFF;foreground-color: #000000;font-weight: regular;}";
-const QString cssSpinBoxError = "QSpinBox{background: #FF9090;foreground-color: #FFFFFF;font-weight: bold;}";
+const QString cssLineEditOk = "QLineEdit{background: #FFFFFF;foreground-color: #000000;}";
+const QString cssLineEditDisabled = "QLineEdit{background: #646464;foreground-color: #FFFFFF;}";
+const QString cssLineEditError = "QLineEdit{background: #FF9090;foreground-color: #FFFFFF;}";
+const QString cssDoubleSpinBoxOk = "QDoubleSpinBox{background: #FFFFFF;foreground-color: #000000;}";
+const QString cssDoubleSpinBoxDisabled = "QDoubleSpinBox{background: #646464;foreground-color: #000000;}";
+const QString cssDoubleSpinBoxError = "QDoubleSpinBox{background: #FF9090;foreground-color: #FFFFFF;}";
+const QString cssSpinBoxOk = "QSpinBox{background: #FFFFFF;foreground-color: #000000;}";
+const QString cssSpinBoxDisabled = "QSpinBox{background: #646464;foreground-color: #000000;}";
+const QString cssSpinBoxError = "QSpinBox{background: #FF9090;foreground-color: #FFFFFF;}";
 
 
 // Define constants used to compute bitrates and bitrates tolerances
@@ -61,6 +64,7 @@ const float intBirateToleranceB = 1560587.623;
 mainForm::mainForm()
 {
     widget.setupUi(this);
+    widget.progressbarEncode->setVisible(false);
     
     // Create the preview form
     preview = new previewForm;
@@ -123,13 +127,6 @@ void mainForm::encodeVideo()
     std::ofstream LogFile;
     LogFile.open ("previousrun.log");
     
-    // Initialize GUI
-    widget.lineeditUserFileInput->setStyleSheet(cssLineEditOk);
-    widget.lineeditBasename->setStyleSheet(cssLineEditOk);
-    widget.doublespinboxUserPreviewTime->setStyleSheet(cssDoubleSpinBoxOk);
-    widget.spinboxUserResizeResolutionX->setStyleSheet(cssSpinBoxOk);
-    widget.spinboxUserResizeResolutionY->setStyleSheet(cssSpinBoxOk);
-    
 	// Initialize variables from GUI
 	pathApp = QDir::currentPath();
 	pathUserFileInput = widget.lineeditUserFileInput->text();
@@ -147,6 +144,17 @@ void mainForm::encodeVideo()
     timeUserCutTimeStart = widget.doublespinboxUserCutTimeStart->value();
     timeUserCutTimeStop = widget.doublespinboxUserCutTimeStop->value();
 
+    // Initialize GUI
+    widget.lineeditUserFileInput->setStyleSheet(cssLineEditOk);
+    widget.lineeditBasename->setStyleSheet(cssLineEditOk);
+    if (needPreview)
+        widget.doublespinboxUserPreviewTime->setStyleSheet(cssDoubleSpinBoxOk);
+    if (needUserDefined)
+    {
+        widget.spinboxUserResizeResolutionX->setStyleSheet(cssSpinBoxOk);
+        widget.spinboxUserResizeResolutionY->setStyleSheet(cssSpinBoxOk);
+    }
+    
 #ifdef LINUX
 	std::string pathCommands = pathApp.toStdString() + "/" + filenameCommands;
 #endif
@@ -213,18 +221,29 @@ void mainForm::encodeVideo()
     // Form is correct
     if (boolFormIsOk)
     {
+        // Apply style sheets
+        widget.lineeditUserFileInput->setStyleSheet(cssLineEditDisabled);
+        widget.lineeditBasename->setStyleSheet(cssLineEditDisabled);
+        widget.doublespinboxUserPreviewTime->setStyleSheet(cssDoubleSpinBoxDisabled);
+        widget.spinboxUserResizeResolutionX->setStyleSheet(cssSpinBoxDisabled);
+        widget.spinboxUserResizeResolutionY->setStyleSheet(cssSpinBoxDisabled);
+        
         // Form is correct disable GUI components
+        widget.groupboxInput->setEnabled(false);
         widget.lineeditUserFileInput->setEnabled(false);
         widget.toolbuttonUserFileInput->setEnabled(false);
         widget.lineeditBasename->setEnabled(false);
         widget.toolbuttonBasename->setEnabled(false);
+        widget.groupboxToDoList->setEnabled(false);
         widget.checkboxPreview->setEnabled(false);
         widget.checkbox360->setEnabled(false);
         widget.checkbox720->setEnabled(false);
         widget.checkbox1080->setEnabled(false);
         widget.checkboxUserDefined->setEnabled(false);
+        widget.groupboxSetupPreview->setEnabled(false);
         widget.doublespinboxUserPreviewTime->setEnabled(false);
         widget.toolbuttonUserPreviewTime->setEnabled(false);
+        widget.groupboxSetupUserDefined->setEnabled(false);
         widget.spinboxUserResizeResolutionX->setEnabled(false);
         widget.spinboxUserResizeResolutionY->setEnabled(false);
         widget.doublespinboxUserCutTimeStart->setEnabled(false);
@@ -300,7 +319,6 @@ void mainForm::encodeVideo()
                             tempId = xmlCommand->Attribute("id");
                             tempCommand.id = tempId;
                             tempCommand.exitStatus = 0;
-                            //LogFile << "   " << xmlCommand -> Attribute("id") << " loaded : ";
 
                             // Fill software attribute
                             xmlSoftware = xmlCommand -> FirstChildElement("software");
@@ -462,9 +480,14 @@ void mainForm::encodeVideo()
                                 }
                             }
 
-                            // Easy ...
+                            // Reset form 
                             LogFile.close();
                             reinitializeForm();
+                            widget.lineeditUserFileInput->setStyleSheet(cssLineEditOk);
+                            widget.lineeditBasename->setStyleSheet(cssLineEditOk);
+                            widget.doublespinboxUserPreviewTime->setStyleSheet(cssDoubleSpinBoxDisabled);
+                            widget.spinboxUserResizeResolutionX->setStyleSheet(cssSpinBoxDisabled);
+                            widget.spinboxUserResizeResolutionY->setStyleSheet(cssSpinBoxDisabled);
                         }
                     }
                 }
@@ -480,12 +503,14 @@ void mainForm::enablePreviewGroupbox(int checkboxState)
     {
         widget.groupboxSetupPreview->setEnabled(true);
         widget.doublespinboxUserPreviewTime->setEnabled(true);
+        widget.doublespinboxUserPreviewTime->setStyleSheet(cssDoubleSpinBoxOk);
         widget.toolbuttonUserPreviewTime->setEnabled(true);
     }
     else
     {
         widget.groupboxSetupPreview->setEnabled(false);
         widget.doublespinboxUserPreviewTime->setEnabled(false);
+        widget.doublespinboxUserPreviewTime->setStyleSheet(cssDoubleSpinBoxDisabled);
         widget.toolbuttonUserPreviewTime->setEnabled(false);
     }
 }
@@ -497,7 +522,9 @@ void mainForm::enableUserDefinedVideoGroupbox(int checkboxState)
     {
         widget.groupboxSetupUserDefined->setEnabled(true);
         widget.spinboxUserResizeResolutionX->setEnabled(true);
+        widget.spinboxUserResizeResolutionX->setStyleSheet(cssSpinBoxOk);
         widget.spinboxUserResizeResolutionY->setEnabled(true);
+        widget.spinboxUserResizeResolutionY->setStyleSheet(cssSpinBoxOk);
         widget.doublespinboxUserCutTimeStart->setEnabled(true);
         widget.doublespinboxUserCutTimeStop->setEnabled(true);
     }
@@ -505,7 +532,9 @@ void mainForm::enableUserDefinedVideoGroupbox(int checkboxState)
     {
         widget.groupboxSetupUserDefined->setEnabled(false);
         widget.spinboxUserResizeResolutionX->setEnabled(false);
+        widget.spinboxUserResizeResolutionX->setStyleSheet(cssSpinBoxDisabled);
         widget.spinboxUserResizeResolutionY->setEnabled(false);
+        widget.spinboxUserResizeResolutionY->setStyleSheet(cssSpinBoxDisabled);
         widget.doublespinboxUserCutTimeStart->setEnabled(false);
         widget.doublespinboxUserCutTimeStop->setEnabled(false);
     }
@@ -545,10 +574,12 @@ void mainForm::reinitializeForm()
     widget.doublespinboxUserCutTimeStop->setValue(99999);
 
     // Process finished enable GUI components
+    widget.groupboxInput->setEnabled(true);
     widget.lineeditUserFileInput->setEnabled(true);
     widget.toolbuttonUserFileInput->setEnabled(true);
     widget.lineeditBasename->setEnabled(true);
     widget.toolbuttonBasename->setEnabled(true);
+    widget.groupboxToDoList->setEnabled(true);
     widget.checkboxPreview->setEnabled(true);
     widget.checkbox360->setEnabled(true);
     widget.checkbox720->setEnabled(true);
