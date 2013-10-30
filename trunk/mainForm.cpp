@@ -6,10 +6,7 @@
 //============================================================================
 
 
-//#define LINUX
-#define WINDOWS
-
-
+#include "os.h"
 #include <fstream>
 #include <QProcess>
 #include <QFileDialog>
