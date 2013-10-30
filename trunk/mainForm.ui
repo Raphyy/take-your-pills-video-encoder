@@ -30,8 +30,7 @@
   </property>
   <property name="font">
    <font>
-    <family>Sawasdee</family>
-    <pointsize>12</pointsize>
+    <pointsize>-1</pointsize>
     <weight>50</weight>
     <italic>false</italic>
     <bold>false</bold>
@@ -48,7 +47,7 @@
     <normaloff>:/images/icon.png</normaloff>:/images/icon.png</iconset>
   </property>
   <property name="styleSheet">
-   <string notr="true">font: 12pt &quot;Sawasdee&quot;;</string>
+   <string notr="true">font: 14px;</string>
   </property>
   <widget class="QProgressBar" name="progressbarEncode">
    <property name="enabled">
