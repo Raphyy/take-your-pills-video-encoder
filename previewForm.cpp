@@ -6,7 +6,15 @@
 //============================================================================
 
 
-#include <Phonon/MediaObject>
+#include "os.h"
+
+#ifdef LINUX
+	#include <Phonon>
+#endif
+#ifdef WINDOWS
+	#include <Phonon/MediaObject>
+#endif
+
 #include <QUrl>
 #include <QLabel>
 #include "previewForm.h"
