@@ -100,7 +100,7 @@ void mainForm::openFile()
 void mainForm::displayHelp()
 {
 	// Display information message
-	QMessageBox::information(this,"About Basename","Basename is used to generate filenames.\nFor example, if you enter \"typ\", output files should be named:\n\"typSD.flv\" \"typHD.flv\" and \"typPV.jpg\".");
+	QMessageBox::information(this,"About Basename","Basename is used to generate filenames.\nFor example, if you enter \"typ\", output files should be named:\n\"typ360.mp4\", \"typ720.mp4\", \"typ1080.mp4\", \"typUSER.mp4\" and \"typPREVIEW.jpg\".");
 }
 
 
@@ -174,7 +174,7 @@ void mainForm::encodeVideo()
     {
         boolFormIsOk = false;
         widget.lineeditUserFileInput->setStyleSheet(cssLineEditError);
-		QMessageBox::information(this,"Information","You must select a video file.");
+		QMessageBox::warning(this,"Warning","You must select a video file.");
     }
     
     // Check if a basename has been entered
@@ -182,7 +182,7 @@ void mainForm::encodeVideo()
     {
         boolFormIsOk = false;
         widget.lineeditBasename->setStyleSheet(cssLineEditError);
-		QMessageBox::information(this,"Information","You must enter a basename.");
+		QMessageBox::warning(this,"Warning","You must enter a basename.");
     }
     
     // Check a new resolution X has been entered, if needed
@@ -190,7 +190,7 @@ void mainForm::encodeVideo()
     {
         boolFormIsOk = false;
         widget.spinboxUserResizeResolutionX->setStyleSheet(cssSpinBoxError);
-        QMessageBox::information(this,"Information","As you want a user-defined video, you should enter a valid resolution.");
+        QMessageBox::warning(this,"Warning","Since you want a user-defined video, you must enter a valid resolution.");
     }
 
     // Check a new resolution Y has been entered, if needed
@@ -198,7 +198,7 @@ void mainForm::encodeVideo()
     {
         boolFormIsOk = false;
         widget.spinboxUserResizeResolutionY->setStyleSheet(cssSpinBoxError);
-        QMessageBox::information(this,"Information","As you want a user-defined video, you should enter a valid resolution.");
+        QMessageBox::warning(this,"Warning","Since you want a user-defined video, you must enter a valid resolution.");
     }
 
     // Check a preview time has been entered, if needed
@@ -253,7 +253,7 @@ void mainForm::encodeVideo()
 
         if (!xmlFile.LoadFile())
         {
-            QMessageBox::critical(this,"Error","Unable to load the file \"config.xml\".\nIt should be in application's root folder.");
+            QMessageBox::critical(this,"Error","Unable to load \"config.xml\".\nIt should be in application's root folder.");
             addNewLineInLog(LogFile);
             LogFile << "   /!\\ Unable to load \"config.xml\" or not valid.\n";
             addNewLineInLog(LogFile);
@@ -269,7 +269,7 @@ void mainForm::encodeVideo()
             
             if (!xmlRoot)
             {
-                QMessageBox::critical(this,"Error","Unable to read XML data from the file \"config.xml\". Check the log file to find out what happened.");
+                QMessageBox::critical(this,"Error","Unable to read XML data from \"config.xml\". Check the log file to find out what happened.");
                 addNewLineInLog(LogFile);
                 LogFile << "   /!\\ Unable to find the \"<uploadurl>\" root tag in the \"config.xml\" file.\n";
                 addNewLineInLog(LogFile);
@@ -287,7 +287,7 @@ void mainForm::encodeVideo()
                 // Detect error in finding first element in XML file
                 if (!xmlRoot)
                 {
-                    QMessageBox::critical(this,"Error","Unable to read XML data from the file \"config.xml\". Check the log file to find out what happened.");
+                    QMessageBox::critical(this,"Error","Unable to read XML data from \"config.xml\". Check the log file to find out what happened.");
                     addNewLineInLog(LogFile);
                     LogFile << "   /!\\ Unable to find the \"<commands>\" root tag in the \"config.xml\" file.\n";
                     addNewLineInLog(LogFile);
@@ -302,7 +302,7 @@ void mainForm::encodeVideo()
 
                     if (!xmlCommand)
                     {
-                        QMessageBox::critical(this,"Error","Unable to read XML data from the file \"config.xml\". Check the log file to find out what happened.");
+                        QMessageBox::critical(this,"Error","Unable to read XML data from \"config.xml\". Check the log file to find out what happened.");
                         addNewLineInLog(LogFile);
                         LogFile << "   /!\\ Unable to find the \"<command>\" tag in the \"config.xml\" file.";
                         boolXmlFileIsOk = false;
@@ -322,7 +322,7 @@ void mainForm::encodeVideo()
                             
                             if (!xmlSoftware)
                             {
-                                QMessageBox::critical(this,"Error","Unable to read XML data from the file \"config.xml\". Check the log file to find out what happened.");
+                                QMessageBox::critical(this,"Error","Unable to read XML data from \"config.xml\". Check the log file to find out what happened.");
                                 addNewLineInLog(LogFile);
                                 LogFile << "   /!\\ " << tempCommand.id << " command loading failed : unable to find a \"<software>\" tag in the \"config.xml\" file.";
                                 boolXmlFileIsOk = false;
@@ -338,7 +338,7 @@ void mainForm::encodeVideo()
 
                                 if (!xmlArgument)
                                 {
-                                    QMessageBox::critical(this,"Error","Unable to read XML data from the file \"config.xml\". Check the log file to find out what happened.");
+                                    QMessageBox::critical(this,"Error","Unable to read XML data from \"config.xml\". Check the log file to find out what happened.");
                                     addNewLineInLog(LogFile);
                                     LogFile << "   /!\\ Unable to find the \"<argument>\" tags in the \"config.xml\" file.";
                                     boolXmlFileIsOk = false;
@@ -417,7 +417,7 @@ void mainForm::encodeVideo()
                         {
                             QMessageBox::critical(this,"Error","The job-list is empty. Check the log file to find out what happened.");
                             addNewLineInLog(LogFile);
-                            LogFile << "   /!\\ Job-list is empty : check there is at least one command for preview, standard (360), high definition (720 and 1080) and used-defined videos in the \"config.xml\" file.\n";
+                            LogFile << "   /!\\ Job-list is empty : make sure that there is at least one command for preview, standard (360), high definition (720 and 1080) and used-defined videos in the \"config.xml\" file.\n";
                             addNewLineInLog(LogFile);
                             LogFile << "Job failed.";
                             LogFile.close();
