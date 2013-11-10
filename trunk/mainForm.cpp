@@ -18,7 +18,7 @@
 #include "tinyxml.h"
 
 
-// Define all possible tags
+// Define string constants
 const std::string filenameCommands = "config.xml";
 const std::string tagInternalFFmpeg = "{internal.ffmpeg}";
 const std::string tagInternalFFmpegPresetFastFirstPass = "{internal.ffmpeg.preset.fastfirstpass}";
@@ -39,16 +39,17 @@ const std::string id1080 = "1080";
 const std::string idUser = "User";
 
 
-// Define CSS styles
-const QString cssLineEditOk = "QLineEdit{background: #FFFFFF;foreground-color: #000000;}";
-const QString cssLineEditDisabled = "QLineEdit{background: #646464;foreground-color: #FFFFFF;}";
-const QString cssLineEditError = "QLineEdit{background: #FF9090;foreground-color: #FFFFFF;}";
-const QString cssDoubleSpinBoxOk = "QDoubleSpinBox{background: #FFFFFF;foreground-color: #000000;}";
-const QString cssDoubleSpinBoxDisabled = "QDoubleSpinBox{background: #646464;foreground-color: #000000;}";
-const QString cssDoubleSpinBoxError = "QDoubleSpinBox{background: #FF9090;foreground-color: #FFFFFF;}";
-const QString cssSpinBoxOk = "QSpinBox{background: #FFFFFF;foreground-color: #000000;}";
-const QString cssSpinBoxDisabled = "QSpinBox{background: #646464;foreground-color: #000000;}";
-const QString cssSpinBoxError = "QSpinBox{background: #FF9090;foreground-color: #FFFFFF;}";
+// Define QString constants
+const QString pathLinuxLibraries = "/usr/lib/typve";
+const QString cssLineEditOk = "QLineEdit{background: #FFFFFF;}";
+const QString cssLineEditDisabled = "QLineEdit{background: #646464;}";
+const QString cssLineEditError = "QLineEdit{background: #FF9090;}";
+const QString cssDoubleSpinBoxOk = "QDoubleSpinBox{background: #FFFFFF;}";
+const QString cssDoubleSpinBoxDisabled = "QDoubleSpinBox{background: #646464;}";
+const QString cssDoubleSpinBoxError = "QDoubleSpinBox{background: #FF9090;}";
+const QString cssSpinBoxOk = "QSpinBox{background: #FFFFFF;}";
+const QString cssSpinBoxDisabled = "QSpinBox{background: #646464;}";
+const QString cssSpinBoxError = "QSpinBox{background: #FF9090;}";
 
 
 // Define constants used to compute bitrates and bitrates tolerances
@@ -91,23 +92,23 @@ mainForm::~mainForm()
 
 void mainForm::openFile()
 {
-	// Select video file to encode
-	QString fileName = QFileDialog::getOpenFileName(this,tr("Select a video file"),"/",tr("Video (*.*)"));
-	widget.lineeditUserFileInput->setText(fileName);
+    // Select video file to encode
+    QString fileName = QFileDialog::getOpenFileName(this,tr("Select a video file"),"/",tr("Video (*.*)"));
+    widget.lineeditUserFileInput->setText(fileName);
 }
 
 
 void mainForm::displayHelp()
 {
-	// Display information message
-	QMessageBox::information(this,"About Basename","Basename is used to generate filenames.\nFor example, if you enter \"typ\", output files should be named:\n\"typ360.mp4\", \"typ720.mp4\", \"typ1080.mp4\", \"typUSER.mp4\" and \"typPREVIEW.jpg\".");
+    // Display information message
+    QMessageBox::information(this,"About Basename","Basename is used to generate filenames.\nFor example, if you enter \"typ\", output files should be named:\n\"typ360.mp4\", \"typ720.mp4\", \"typ1080.mp4\", \"typUSER.mp4\" and \"typPREVIEW.jpg\".");
 }
 
 
 void mainForm::openPreviewForm()
 {
     emit sendPath(widget.lineeditUserFileInput->text());
-	preview->exec();
+    preview->exec();
     preview->stop();
 }
 
@@ -122,18 +123,18 @@ void mainForm::encodeVideo()
 {
     // Initialize log file
     std::ofstream LogFile;
-    LogFile.open ("previousrun.log");
+    LogFile.open ("typve.log");
     
-	// Initialize variables from GUI
-	pathApp = QDir::currentPath();
-	pathUserFileInput = widget.lineeditUserFileInput->text();
-	basename = widget.lineeditBasename->text();
-	needPreview = widget.checkboxPreview->isChecked();
+    // Initialize variables from GUI
+    pathApp = QDir::currentPath();
+    pathUserFileInput = widget.lineeditUserFileInput->text();
+    basename = widget.lineeditBasename->text();
+    needPreview = widget.checkboxPreview->isChecked();
     need360 = widget.checkbox360->isChecked();
     need720 = widget.checkbox720->isChecked();
     need1080 = widget.checkbox1080->isChecked();
     needUserDefined = widget.checkboxUserDefined->isChecked();
-	timeUserPreviewTime = widget.doublespinboxUserPreviewTime->value();
+    timeUserPreviewTime = widget.doublespinboxUserPreviewTime->value();
     intUserResizeResolutionX = widget.spinboxUserResizeResolutionX->value();
     intUserResizeResolutionY = widget.spinboxUserResizeResolutionY->value();
     intUserResizeBitrate = getBitrate(intUserResizeResolutionX,intUserResizeResolutionY);
@@ -153,36 +154,34 @@ void mainForm::encodeVideo()
     }
     
 #ifdef LINUX
-	std::string pathCommands = pathApp.toStdString() + "/" + filenameCommands;
+	std::string pathCommands = pathLinuxLibraries.toStdString() + "/" + filenameCommands;
 #endif
 #ifdef WINDOWS
 	std::string pathCommands = pathApp.toStdString() + "\\" + filenameCommands;
 #endif
 	
-	TiXmlDocument xmlFile(pathCommands.c_str());
-	commands EncodingCommands;
-	command tempCommand;
+    TiXmlDocument xmlFile(pathCommands.c_str());
+    commands EncodingCommands;
+    command tempCommand;
     QString tempArgument;
     std::string tempId;
     bool boolFormIsOk = true;
     bool boolXmlFileIsOk = true;
     
-    // TODO: Ask Devon for accurate translations : config.xml, previousrun.log, GUI and message box
-    
 	// Check if a file has been selected
-	if ((pathUserFileInput.size() == 0) && boolFormIsOk)
+    if ((pathUserFileInput.size() == 0) && boolFormIsOk)
     {
         boolFormIsOk = false;
         widget.lineeditUserFileInput->setStyleSheet(cssLineEditError);
-		QMessageBox::warning(this,"Warning","You must select a video file.");
+        QMessageBox::warning(this,"Warning","You must select a video file.");
     }
     
     // Check if a basename has been entered
-	if ((basename.size() == 0) && boolFormIsOk)
+    if ((basename.size() == 0) && boolFormIsOk)
     {
         boolFormIsOk = false;
         widget.lineeditBasename->setStyleSheet(cssLineEditError);
-		QMessageBox::warning(this,"Warning","You must enter a basename.");
+        QMessageBox::warning(this,"Warning","You must enter a basename.");
     }
     
     // Check a new resolution X has been entered, if needed
@@ -253,7 +252,7 @@ void mainForm::encodeVideo()
 
         if (!xmlFile.LoadFile())
         {
-            QMessageBox::critical(this,"Error","Unable to load \"config.xml\".\nIt should be in application's root folder.");
+            QMessageBox::critical(this,"Error","Unable to load \"config.xml\".");
             addNewLineInLog(LogFile);
             LogFile << "   /!\\ Unable to load \"config.xml\" or not valid.\n";
             addNewLineInLog(LogFile);
@@ -265,226 +264,246 @@ void mainForm::encodeVideo()
         else
         {
             TiXmlElement *xmlRoot, *xmlCommand, *xmlSoftware, *xmlArgument;
-            xmlRoot = xmlFile.FirstChildElement("uploadurl");
+            xmlRoot = xmlFile.FirstChildElement("root");
             
             if (!xmlRoot)
             {
                 QMessageBox::critical(this,"Error","Unable to read XML data from \"config.xml\". Check the log file to find out what happened.");
                 addNewLineInLog(LogFile);
-                LogFile << "   /!\\ Unable to find the \"<uploadurl>\" root tag in the \"config.xml\" file.\n";
+                LogFile << "   /!\\ Unable to find the \"<root>\" tag in the \"config.xml\" file.\n";
                 addNewLineInLog(LogFile);
                 LogFile << "Job failed.";
                 LogFile.close();
                 reinitializeForm();
             }
+			
             else
             {
-                urlUpload = QUrl(QString(xmlRoot->GetText()), QUrl::TolerantMode);
-                addNewLineInLog(LogFile);
-                LogFile << "   Upload URL loaded : " << urlUpload.toString().toStdString() << "\n";
-                xmlRoot = xmlRoot->NextSiblingElement("commands");
-
-                // Detect error in finding first element in XML file
+                xmlRoot = xmlRoot->FirstChildElement("uploadurl");
                 if (!xmlRoot)
                 {
                     QMessageBox::critical(this,"Error","Unable to read XML data from \"config.xml\". Check the log file to find out what happened.");
                     addNewLineInLog(LogFile);
-                    LogFile << "   /!\\ Unable to find the \"<commands>\" root tag in the \"config.xml\" file.\n";
+                    LogFile << "   /!\\ Unable to find the \"<uploadurl>\" tag in the \"config.xml\" file.\n";
                     addNewLineInLog(LogFile);
                     LogFile << "Job failed.";
                     LogFile.close();
                     reinitializeForm();
                 }
-
+				
                 else
                 {
-                    xmlCommand = xmlRoot -> FirstChildElement("command");
+                    urlUpload = QUrl(QString(xmlRoot->GetText()), QUrl::TolerantMode);
+                    addNewLineInLog(LogFile);
+                    LogFile << "   Upload URL loaded : ";
+                    if (urlUpload.toString().isEmpty())
+                        LogFile << "none\n";
+                    else
+                        LogFile << urlUpload.toString().toStdString() << "\n";
+                    xmlRoot = xmlRoot->NextSiblingElement("commands");
 
-                    if (!xmlCommand)
+                    // Detect error in finding first element in XML file
+                    if (!xmlRoot)
                     {
                         QMessageBox::critical(this,"Error","Unable to read XML data from \"config.xml\". Check the log file to find out what happened.");
                         addNewLineInLog(LogFile);
-                        LogFile << "   /!\\ Unable to find the \"<command>\" tag in the \"config.xml\" file.";
-                        boolXmlFileIsOk = false;
-                    }
-
-                    else
-                    {
-                        do
-                        {
-                            // Fill id and exitStatus attributes
-                            tempId = xmlCommand->Attribute("id");
-                            tempCommand.id = tempId;
-                            tempCommand.exitStatus = 0;
-
-                            // Fill software attribute
-                            xmlSoftware = xmlCommand -> FirstChildElement("software");
-                            
-                            if (!xmlSoftware)
-                            {
-                                QMessageBox::critical(this,"Error","Unable to read XML data from \"config.xml\". Check the log file to find out what happened.");
-                                addNewLineInLog(LogFile);
-                                LogFile << "   /!\\ " << tempCommand.id << " command loading failed : unable to find a \"<software>\" tag in the \"config.xml\" file.";
-                                boolXmlFileIsOk = false;
-                            }
-                            
-                            else
-                            {
-                                addNewLineInLog(LogFile);
-                                LogFile << "   " << xmlCommand -> Attribute("id") << " loaded : ";
-                                tempCommand.software = xmlSoftware->GetText();
-                                LogFile << xmlSoftware->GetText() << " ";
-                                xmlArgument = xmlSoftware -> NextSiblingElement("argument");
-
-                                if (!xmlArgument)
-                                {
-                                    QMessageBox::critical(this,"Error","Unable to read XML data from \"config.xml\". Check the log file to find out what happened.");
-                                    addNewLineInLog(LogFile);
-                                    LogFile << "   /!\\ Unable to find the \"<argument>\" tags in the \"config.xml\" file.";
-                                    boolXmlFileIsOk = false;
-                                }
-
-                                // Fill arguments attribute
-                                else
-                                {
-                                    do
-                                    {
-                                        tempArgument = xmlArgument->Attribute("option");
-                                        if (!tempArgument.isEmpty())
-                                        {
-                                            tempCommand.arguments << tempArgument;
-                                            LogFile << tempArgument.toStdString() << " ";
-                                        }
-
-                                        tempArgument = xmlArgument->GetText();
-                                        if (!tempArgument.isEmpty())
-                                        {
-                                            tempCommand.arguments << tempArgument;
-                                            LogFile << tempArgument.toStdString() << " ";
-                                        }
-
-                                        xmlArgument = xmlArgument -> NextSiblingElement("argument");
-                                    } while (xmlArgument);
-                                }
-                            }
-
-                            // Add the current command to the joblist only if needed
-                            if ((idPreview.compare(tempId) == 0) && (needPreview == 1))
-                                EncodingCommands.joblist.push_back(tempCommand);
-                            else if ((id360.compare(tempId) == 0) && (need360 == 1))
-                                EncodingCommands.joblist.push_back(tempCommand);
-                            else if ((id720.compare(tempId) == 0) && (need720 == 1))
-                                EncodingCommands.joblist.push_back(tempCommand);
-                            else if ((id1080.compare(tempId) == 0) && (need1080 == 1))
-                                EncodingCommands.joblist.push_back(tempCommand);
-                            else if ((idUser.compare(tempId) == 0) && (needUserDefined == 1))
-                                EncodingCommands.joblist.push_back(tempCommand);
-
-                            // Initialize data for the next command
-                            LogFile << "\n";
-                            tempCommand.software.clear();
-                            tempCommand.arguments.clear();
-                            xmlCommand = xmlCommand -> NextSiblingElement("command");
-
-                        } while (xmlCommand);
-                    }
-
-                    if (!boolXmlFileIsOk)
-                    {
+                        LogFile << "   /!\\ Unable to find the \"<commands>\" tag in the \"config.xml\" file.\n";
                         addNewLineInLog(LogFile);
                         LogFile << "Job failed.";
                         LogFile.close();
                         reinitializeForm();
                     }
-                    
+
                     else
                     {
-                        // Update and show progress bar
-                        widget.progressbarEncode->setValue(0);
-                        widget.progressbarEncode->setVisible(true);
+                        xmlCommand = xmlRoot -> FirstChildElement("command");
 
-                        // Initialize variables
-                        QProcess process;
-                        bool joblistExitStatus = true;
-
-                        // Determine commands number to execute to fill the Progress Bar
-                        int nbrCommands = EncodingCommands.joblist.size();
-
-                        addNewLineInLog(LogFile);
-                        LogFile << "Executing command(s) ...\n";
-                        
-                        if (nbrCommands == 0)
+                        if (!xmlCommand)
                         {
-                            QMessageBox::critical(this,"Error","The job-list is empty. Check the log file to find out what happened.");
+                            QMessageBox::critical(this,"Error","Unable to read XML data from \"config.xml\". Check the log file to find out what happened.");
                             addNewLineInLog(LogFile);
-                            LogFile << "   /!\\ Job-list is empty : make sure that there is at least one command for preview, standard (360), high definition (720 and 1080) and used-defined videos in the \"config.xml\" file.\n";
+                            LogFile << "   /!\\ Unable to find the \"<command>\" tag in the \"config.xml\" file.";
+                            boolXmlFileIsOk = false;
+                        }
+
+                        else
+                        {
+                            do
+                            {
+                                // Fill id and exitStatus attributes
+                                tempId = xmlCommand->Attribute("id");
+                                tempCommand.id = tempId;
+                                tempCommand.exitStatus = 0;
+
+                                // Fill software attribute
+                                xmlSoftware = xmlCommand -> FirstChildElement("software");
+
+                                if (!xmlSoftware)
+                                {
+                                    QMessageBox::critical(this,"Error","Unable to read XML data from \"config.xml\". Check the log file to find out what happened.");
+                                    addNewLineInLog(LogFile);
+                                    LogFile << "   /!\\ " << tempCommand.id << " command loading failed : unable to find a \"<software>\" tag in the \"config.xml\" file.";
+                                    boolXmlFileIsOk = false;
+                                }
+
+                                else
+                                {
+                                    addNewLineInLog(LogFile);
+                                    LogFile << "   " << xmlCommand -> Attribute("id") << " loaded : ";
+                                    tempCommand.software = xmlSoftware->GetText();
+                                    LogFile << xmlSoftware->GetText() << " ";
+                                    xmlArgument = xmlSoftware -> NextSiblingElement("argument");
+
+                                    if (!xmlArgument)
+                                    {
+                                        QMessageBox::critical(this,"Error","Unable to read XML data from \"config.xml\". Check the log file to find out what happened.");
+                                        addNewLineInLog(LogFile);
+                                        LogFile << "   /!\\ Unable to find the \"<argument>\" tags in the \"config.xml\" file.";
+                                        boolXmlFileIsOk = false;
+                                    }
+
+                                    // Fill arguments attribute
+                                    else
+                                    {
+                                        do
+                                        {
+                                            tempArgument = xmlArgument->Attribute("option");
+                                            if (!tempArgument.isEmpty())
+                                            {
+                                                tempCommand.arguments << tempArgument;
+                                                LogFile << tempArgument.toStdString() << " ";
+                                            }
+
+                                            tempArgument = xmlArgument->GetText();
+                                            if (!tempArgument.isEmpty())
+                                            {
+                                                tempCommand.arguments << tempArgument;
+                                                LogFile << tempArgument.toStdString() << " ";
+                                            }
+
+                                            xmlArgument = xmlArgument -> NextSiblingElement("argument");
+                                        } while (xmlArgument);
+                                    }
+                                }
+
+                                // Add the current command to the joblist only if needed
+                                if ((idPreview.compare(tempId) == 0) && (needPreview == 1))
+                                    EncodingCommands.joblist.push_back(tempCommand);
+                                else if ((id360.compare(tempId) == 0) && (need360 == 1))
+                                    EncodingCommands.joblist.push_back(tempCommand);
+                                else if ((id720.compare(tempId) == 0) && (need720 == 1))
+                                    EncodingCommands.joblist.push_back(tempCommand);
+                                else if ((id1080.compare(tempId) == 0) && (need1080 == 1))
+                                    EncodingCommands.joblist.push_back(tempCommand);
+                                else if ((idUser.compare(tempId) == 0) && (needUserDefined == 1))
+                                    EncodingCommands.joblist.push_back(tempCommand);
+
+                                // Initialize data for the next command
+                                LogFile << "\n";
+                                tempCommand.software.clear();
+                                tempCommand.arguments.clear();
+                                xmlCommand = xmlCommand -> NextSiblingElement("command");
+
+                            } while (xmlCommand);
+                        }
+
+                        if (!boolXmlFileIsOk)
+                        {
                             addNewLineInLog(LogFile);
                             LogFile << "Job failed.";
                             LogFile.close();
                             reinitializeForm();
                         }
+
                         else
                         {
-                            // Execute commands
-                            for(int i=0;i<nbrCommands;i++)
-                            {
-                                // Prepare and execute process
-                                generateCommand(&EncodingCommands.joblist[i], pathApp, pathUserFileInput, basename, EncodingCommands.joblist[i].id, timeUserPreviewTime, intUserResizeResolutionX, intUserResizeResolutionY, timeUserCutTimeStart, timeUserCutTimeStop, intUserResizeBitrate, intUserResizeBitrateTolerance);
-                                process.start(EncodingCommands.joblist[i].software, EncodingCommands.joblist[i].arguments);
+                            // Update and show progress bar
+                            widget.progressbarEncode->setValue(0);
+                            widget.progressbarEncode->setVisible(true);
 
-                                // Avoid freezing the GUI
-                                while (process.state() != QProcess::NotRunning)
-                                    QCoreApplication::processEvents();
+                            // Initialize variables
+                            QProcess process;
+                            bool joblistExitStatus = true;
 
-                                // Manage process exit status
-                                EncodingCommands.joblist[i].exitStatus = process.exitStatus();
-                                joblistExitStatus = joblistExitStatus && (process.exitStatus()==0);
-                                widget.progressbarEncode->setValue(getPercentage(i+1, nbrCommands));
+                            // Determine commands number to execute to fill the Progress Bar
+                            int nbrCommands = EncodingCommands.joblist.size();
 
-                                // Update logfile
-                                addNewLineInLog(LogFile);
-                                if (EncodingCommands.joblist[i].exitStatus == 0)
-                                    LogFile << "   Done   : ";
-                                else
-                                    LogFile << "   Failed : ";
-                                LogFile << EncodingCommands.joblist[i].software.toStdString() << " ";
-                                for (int j=0; j<EncodingCommands.joblist[i].arguments.size(); j++)
-                                {
-                                    LogFile << EncodingCommands.joblist[i].arguments.at(j).toStdString() << " ";
-                                }
-                                LogFile << "\n";
-                            }
-
-                            // Log executed commands
                             addNewLineInLog(LogFile);
-                            if (joblistExitStatus == 0)
-                                LogFile << "Job failed.";
-                            else
-                                LogFile << "Job done.";
+                            LogFile << "Executing command(s) ...\n";
 
-                            // Display messages if error occurs when encoding
-                            if (!joblistExitStatus)
-                                QMessageBox::critical(this, "Error", "Something went wrong while encoding.\nCheck the log file to know which command failed.");
+                            if (nbrCommands == 0)
+                            {
+                                QMessageBox::critical(this,"Error","The job-list is empty. Check the log file to find out what happened.");
+                                addNewLineInLog(LogFile);
+                                LogFile << "   /!\\ Job-list is empty : make sure that there is at least one command for preview, standard (360), high definition (720 and 1080) and used-defined videos in the \"config.xml\" file.\n";
+                                addNewLineInLog(LogFile);
+                                LogFile << "Job failed.";
+                                LogFile.close();
+                                reinitializeForm();
+                            }
                             else
                             {
-                                if (urlUpload.isEmpty())
-                                    QMessageBox::information(this, "Information", "Job done ! You can upload generated video files.");
+                                // Execute commands
+                                for(int i=0;i<nbrCommands;i++)
+                                {
+                                    // Prepare and execute process
+                                    generateCommand(&EncodingCommands.joblist[i], pathApp, pathUserFileInput, basename, EncodingCommands.joblist[i].id, timeUserPreviewTime, intUserResizeResolutionX, intUserResizeResolutionY, timeUserCutTimeStart, timeUserCutTimeStop, intUserResizeBitrate, intUserResizeBitrateTolerance);
+                                    process.start(EncodingCommands.joblist[i].software, EncodingCommands.joblist[i].arguments);
+
+                                    // Avoid freezing the GUI
+                                    while (process.state() != QProcess::NotRunning)
+                                        QCoreApplication::processEvents();
+
+                                    // Manage process exit status
+                                    EncodingCommands.joblist[i].exitStatus = process.exitStatus();
+                                    joblistExitStatus = joblistExitStatus && (process.exitStatus()==0);
+                                    widget.progressbarEncode->setValue(getPercentage(i+1, nbrCommands));
+
+                                    // Update logfile
+                                    addNewLineInLog(LogFile);
+                                    if (EncodingCommands.joblist[i].exitStatus == 0)
+                                        LogFile << "   Done   : ";
+                                    else
+                                        LogFile << "   Failed : ";
+                                    LogFile << EncodingCommands.joblist[i].software.toStdString() << " ";
+                                    for (int j=0; j<EncodingCommands.joblist[i].arguments.size(); j++)
+                                    {
+                                        LogFile << EncodingCommands.joblist[i].arguments.at(j).toStdString() << " ";
+                                    }
+                                    LogFile << "\n";
+                                }
+
+                                // Log executed commands
+                                addNewLineInLog(LogFile);
+                                if (joblistExitStatus == 0)
+                                    LogFile << "Job failed.";
+                                else
+                                    LogFile << "Job done.";
+
+                                // Display messages if error occurs when encoding
+                                if (!joblistExitStatus)
+                                    QMessageBox::critical(this, "Error", "Something went wrong while encoding.\nCheck the log file to know which command failed.");
                                 else
                                 {
-                                    QMessageBox::StandardButton reply = QMessageBox::question(this, "Question", "Job done ! Do you want to upload generated file(s) ?", QMessageBox::Yes|QMessageBox::No);
-                                    if (reply == QMessageBox::Yes)
-                                        QDesktopServices::openUrl(urlUpload);
+                                    if (urlUpload.isEmpty())
+                                        QMessageBox::information(this, "Information", "Job done ! You can upload generated video files.");
+                                    else
+                                    {
+                                        QMessageBox::StandardButton reply = QMessageBox::question(this, "Question", "Job done ! Do you want to upload generated file(s) ?", QMessageBox::Yes|QMessageBox::No);
+                                        if (reply == QMessageBox::Yes)
+                                            QDesktopServices::openUrl(urlUpload);
+                                    }
                                 }
-                            }
 
-                            // Reset form 
-                            LogFile.close();
-                            reinitializeForm();
-                            widget.lineeditUserFileInput->setStyleSheet(cssLineEditOk);
-                            widget.lineeditBasename->setStyleSheet(cssLineEditOk);
-                            widget.doublespinboxUserPreviewTime->setStyleSheet(cssDoubleSpinBoxDisabled);
-                            widget.spinboxUserResizeResolutionX->setStyleSheet(cssSpinBoxDisabled);
-                            widget.spinboxUserResizeResolutionY->setStyleSheet(cssSpinBoxDisabled);
+                                // Reset form 
+                                LogFile.close();
+                                reinitializeForm();
+                                widget.lineeditUserFileInput->setStyleSheet(cssLineEditOk);
+                                widget.lineeditBasename->setStyleSheet(cssLineEditOk);
+                                widget.doublespinboxUserPreviewTime->setStyleSheet(cssDoubleSpinBoxDisabled);
+                                widget.spinboxUserResizeResolutionX->setStyleSheet(cssSpinBoxDisabled);
+                                widget.spinboxUserResizeResolutionY->setStyleSheet(cssSpinBoxDisabled);
+                            }
                         }
                     }
                 }
@@ -570,7 +589,7 @@ void mainForm::reinitializeForm()
     widget.doublespinboxUserCutTimeStart->setValue(0);
     widget.doublespinboxUserCutTimeStop->setValue(99999);
 
-    // Process finished enable GUI components
+    // Enable GUI components
     widget.groupboxInput->setEnabled(true);
     widget.lineeditUserFileInput->setEnabled(true);
     widget.toolbuttonUserFileInput->setEnabled(true);
@@ -591,15 +610,19 @@ void mainForm::reinitializeForm()
     widget.doublespinboxUserCutTimeStart->setEnabled(false);
     widget.doublespinboxUserCutTimeStop->setEnabled(false);
     widget.pushbuttonEncode->setEnabled(false);
+    
+    // Apply defaut style to GUI components
+    widget.lineeditUserFileInput->setStyleSheet(cssLineEditOk);
+    widget.lineeditBasename->setStyleSheet(cssLineEditOk);
 }
 
 
 void generateCommand(command *commandCurrent,
-					 QString pathApp,
-					 QString pathUserFileInput,
-					 QString basename,
+                     QString pathApp,
+                     QString pathUserFileInput,
+                     QString basename,
                      std::string type,
-					 double timeUserPreviewTime,
+                     double timeUserPreviewTime,
                      double intUserResizeResolutionX,
                      double intUserResizeResolutionY,
                      double timeUserCutTimeStart,
@@ -610,33 +633,43 @@ void generateCommand(command *commandCurrent,
     QString temp;
     
     // Manage tag {internal.ffmpeg}
-    temp = pathApp + "/ffmpeg/";
     #ifdef LINUX
-		temp = temp + "ffmpeg";
+		temp = pathLinuxLibraries + "/ffmpeg/ffmpeg";
     #endif
     #ifdef WINDOWS
-		temp = temp + "ffmpeg.exe";
+		temp = pathApp + "/ffmpeg/ffmpeg.exe";
     #endif
     commandCurrent->software.replace(QString::fromStdString(tagInternalFFmpeg), temp);
     temp = "";
     
     // Manage tag {internal.ffmpeg.preset.fastfirstpass}
-    temp = pathApp + "/ffmpeg/fastfirstpass.ffpreset";
+    #ifdef LINUX
+		temp = pathLinuxLibraries;
+    #endif
+    #ifdef WINDOWS
+        temp = pathApp;
+    #endif
+    temp = temp + "/ffmpeg/fastfirstpass.ffpreset";
     commandCurrent->arguments.replaceInStrings(QString::fromStdString(tagInternalFFmpegPresetFastFirstPass), temp);
     temp = "";
     
     // Manage tag {internal.ffmpeg.preset.hq}
-    temp = pathApp + "/ffmpeg/hq.ffpreset";
+    #ifdef LINUX
+		temp = pathLinuxLibraries;
+    #endif
+    #ifdef WINDOWS
+        temp = pathApp;
+    #endif
+    temp = temp + "/ffmpeg/hq.ffpreset";
     commandCurrent->arguments.replaceInStrings(QString::fromStdString(tagInternalFFmpegPresetHq), temp);
     temp = "";
 
     // Manage tag {internal.mp4box}
-    temp = pathApp + "/mp4box/";
     #ifdef LINUX
-		temp = temp + "mp4box";
+		temp = "MP4Box";   // The GPAC package is supposed installed on Linux dur to dependencies
     #endif
     #ifdef WINDOWS
-		temp = temp + "mp4box.exe";
+		temp = "/mp4box/mp4box.exe";
     #endif
     commandCurrent->software.replace(QString::fromStdString(tagInternalMP4box), temp);
     temp = "";
@@ -686,17 +719,17 @@ void addNewLineInLog (std::ofstream& LogFile)
 
 int getBitrate(int resolutionX,int resolutionY)
 {
-	return ((resolutionX * resolutionY * intBirateA) + intBirateB);
+    return ((resolutionX * resolutionY * intBirateA) + intBirateB);
 }
 
 
 int getBitrateTolerance(int resolutionX,int resolutionY)
 {
-	return ((resolutionX * resolutionY * intBirateToleranceA) + intBirateToleranceB);
+    return ((resolutionX * resolutionY * intBirateToleranceA) + intBirateToleranceB);
 }
 
 
 int getPercentage(int value,int maximum)
 {
-	return (value * 100 / maximum);
+    return (value * 100 / maximum);
 }
