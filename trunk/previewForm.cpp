@@ -9,10 +9,10 @@
 #include "os.h"
 
 #ifdef LINUX
-	#include <Phonon>
+    #include <Phonon>
 #endif
 #ifdef WINDOWS
-	#include <Phonon/MediaObject>
+    #include <Phonon/MediaObject>
 #endif
 
 #include <QUrl>
@@ -44,8 +44,7 @@ previewForm::previewForm()
 
 
 previewForm::~previewForm()
-{
-    
+{ 
 }
 
 
