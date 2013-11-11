@@ -12,8 +12,8 @@
 
 int main(int argc,char *argv[])
 {
-	QApplication mainApplication(argc,argv);
+    QApplication mainApplication(argc,argv);
     mainForm form;
-	form.show();
-	return mainApplication.exec();
+    form.show();
+    return mainApplication.exec();
 }

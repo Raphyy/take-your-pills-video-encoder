@@ -78,17 +78,17 @@ class mainForm : public QDialog
 
 
 void generateCommand(command *,
-                    QString,
-					QString,
-					QString,
-                    std::string,
-					double,
-                    double,
-                    double,
-                    double,
-                    double,
-                    int,
-                    int);
+                     QString,
+                     QString,
+                     QString,
+                     std::string,
+                     double,
+                     double,
+                     double,
+                     double,
+                     double,
+                     int,
+                     int);
 
 
 void addNewLineInLog (std::ofstream&);

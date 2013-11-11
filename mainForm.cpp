@@ -154,10 +154,10 @@ void mainForm::encodeVideo()
     }
     
 #ifdef LINUX
-	std::string pathCommands = pathLinuxLibraries.toStdString() + "/" + filenameCommands;
+    std::string pathCommands = pathLinuxLibraries.toStdString() + "/" + filenameCommands;
 #endif
 #ifdef WINDOWS
-	std::string pathCommands = pathApp.toStdString() + "\\" + filenameCommands;
+    std::string pathCommands = pathApp.toStdString() + "\\" + filenameCommands;
 #endif
 	
     TiXmlDocument xmlFile(pathCommands.c_str());
@@ -168,7 +168,7 @@ void mainForm::encodeVideo()
     bool boolFormIsOk = true;
     bool boolXmlFileIsOk = true;
     
-	// Check if a file has been selected
+    // Check if a file has been selected
     if ((pathUserFileInput.size() == 0) && boolFormIsOk)
     {
         boolFormIsOk = false;
@@ -634,17 +634,17 @@ void generateCommand(command *commandCurrent,
     
     // Manage tag {internal.ffmpeg}
     #ifdef LINUX
-		temp = pathLinuxLibraries + "/ffmpeg/ffmpeg";
+        temp = pathLinuxLibraries + "/ffmpeg/ffmpeg";
     #endif
     #ifdef WINDOWS
-		temp = pathApp + "/ffmpeg/ffmpeg.exe";
+        temp = pathApp + "/ffmpeg/ffmpeg.exe";
     #endif
     commandCurrent->software.replace(QString::fromStdString(tagInternalFFmpeg), temp);
     temp = "";
     
     // Manage tag {internal.ffmpeg.preset.fastfirstpass}
     #ifdef LINUX
-		temp = pathLinuxLibraries;
+        temp = pathLinuxLibraries;
     #endif
     #ifdef WINDOWS
         temp = pathApp;
@@ -655,7 +655,7 @@ void generateCommand(command *commandCurrent,
     
     // Manage tag {internal.ffmpeg.preset.hq}
     #ifdef LINUX
-		temp = pathLinuxLibraries;
+        temp = pathLinuxLibraries;
     #endif
     #ifdef WINDOWS
         temp = pathApp;
@@ -666,10 +666,10 @@ void generateCommand(command *commandCurrent,
 
     // Manage tag {internal.mp4box}
     #ifdef LINUX
-		temp = "MP4Box";   // The GPAC package is supposed installed on Linux dur to dependencies
+        temp = "MP4Box";   // The GPAC package is supposed installed on Linux dur to dependencies
     #endif
     #ifdef WINDOWS
-		temp = "/mp4box/mp4box.exe";
+        temp = "/mp4box/mp4box.exe";
     #endif
     commandCurrent->software.replace(QString::fromStdString(tagInternalMP4box), temp);
     temp = "";
@@ -699,10 +699,10 @@ void generateCommand(command *commandCurrent,
     
     // Manage tag {user.file.output.*} (MUST be the LAST operation)
     #ifdef LINUX
-		temp = pathUserFileInput.section("/",0,-2) + "/" + basename + QString::fromStdString(type).toUpper() + ".";
+        temp = pathUserFileInput.section("/",0,-2) + "/" + basename + QString::fromStdString(type).toUpper() + ".";
     #endif
     #ifdef WINDOWS
-		temp = pathUserFileInput.section("/",0,-2) + "/" + basename + QString::fromStdString(type).toUpper() + ".";
+        temp = pathUserFileInput.section("/",0,-2) + "/" + basename + QString::fromStdString(type).toUpper() + ".";
     #endif
     commandCurrent->arguments.replaceInStrings(QString::fromStdString(tagUserFileOutput), temp);
     commandCurrent->arguments.replaceInStrings(QRegExp("[}]$"),"");  // Removes all "}" at the end of QStringLists
