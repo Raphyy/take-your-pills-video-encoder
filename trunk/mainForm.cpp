@@ -142,6 +142,10 @@ void mainForm::encodeVideo()
     timeUserCutTimeStart = widget.doublespinboxUserCutTimeStart->value();
     timeUserCutTimeStop = widget.doublespinboxUserCutTimeStop->value();
 
+    // Remove all non-alphanumerical characters in the basename
+    basename.remove(QRegExp("[^a-zA-Z\\d\\s]"));
+    widget.lineeditBasename->setText(basename);
+    
     // Initialize GUI
     widget.lineeditUserFileInput->setStyleSheet(cssLineEditOk);
     widget.lineeditBasename->setStyleSheet(cssLineEditOk);
@@ -189,7 +193,7 @@ void mainForm::encodeVideo()
     {
         boolFormIsOk = false;
         widget.spinboxUserResizeResolutionX->setStyleSheet(cssSpinBoxError);
-        QMessageBox::warning(this,"Warning","Since you want a user-defined video, you must enter a valid resolution.");
+        QMessageBox::warning(this,"Warning","Because you want a user-defined video, you must enter a valid resolution.");
     }
 
     // Check a new resolution Y has been entered, if needed
@@ -197,14 +201,14 @@ void mainForm::encodeVideo()
     {
         boolFormIsOk = false;
         widget.spinboxUserResizeResolutionY->setStyleSheet(cssSpinBoxError);
-        QMessageBox::warning(this,"Warning","Since you want a user-defined video, you must enter a valid resolution.");
+        QMessageBox::warning(this,"Warning","Because you want a user-defined video, you must enter a valid resolution.");
     }
 
     // Check a preview time has been entered, if needed
     if ((needPreview == 1) && (timeUserPreviewTime == 0) && boolFormIsOk)
     {
         widget.doublespinboxUserPreviewTime->setStyleSheet(cssDoubleSpinBoxError);
-        QMessageBox::StandardButton reply = QMessageBox::question(this,"Question","You want a preview but you let the default preview time. Is it what you want ?",QMessageBox::Yes|QMessageBox::No);
+        QMessageBox::StandardButton reply = QMessageBox::question(this,"Question","You want a preview image, but you let the default time value.\nIs this what you want?",QMessageBox::Yes|QMessageBox::No);
         if (reply == QMessageBox::No)
             boolFormIsOk = false;
         else
