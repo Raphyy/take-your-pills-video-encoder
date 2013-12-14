@@ -670,10 +670,10 @@ void generateCommand(command *commandCurrent,
 
     // Manage tag {internal.mp4box}
     #ifdef LINUX
-        temp = "MP4Box";   // The GPAC package is supposed installed on Linux dur to dependencies
+        temp = "MP4Box";   // The GPAC package is supposed installed on Linux due to dependencies
     #endif
     #ifdef WINDOWS
-        temp = "/mp4box/mp4box.exe";
+        temp = pathApp + "/mp4box/mp4box.exe";
     #endif
     commandCurrent->software.replace(QString::fromStdString(tagInternalMP4box), temp);
     temp = "";
