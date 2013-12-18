@@ -19,11 +19,13 @@
 
 
 // Define string constants
+const std::string softwareVersion = "1.0.0.66";
 const std::string filenameCommands = "config.xml";
 const std::string tagInternalFFmpeg = "{internal.ffmpeg}";
 const std::string tagInternalFFmpegPresetFastFirstPass = "{internal.ffmpeg.preset.fastfirstpass}";
 const std::string tagInternalFFmpegPresetHq = "{internal.ffmpeg.preset.hq}";
 const std::string tagInternalMP4box = "{internal.mp4box}";
+const std::string tagInternalMP4boxTemp = "{internal.mp4box.temp}";
 const std::string tagUserFileInput = "{user.file.input}";
 const std::string tagUserFileOutput = "{user.file.output.";
 const std::string tagUserPreviewTime = "{user.preview.time}";
@@ -157,12 +159,12 @@ void mainForm::encodeVideo()
         widget.spinboxUserResizeResolutionY->setStyleSheet(cssSpinBoxOk);
     }
     
-#ifdef LINUX
-    std::string pathCommands = pathLinuxLibraries.toStdString() + "/" + filenameCommands;
-#endif
-#ifdef WINDOWS
-    std::string pathCommands = pathApp.toStdString() + "\\" + filenameCommands;
-#endif
+    #ifdef LINUX
+        std::string pathCommands = pathLinuxLibraries.toStdString() + "/" + filenameCommands;
+    #endif
+    #ifdef WINDOWS
+        std::string pathCommands = pathApp.toStdString() + "\\" + filenameCommands;
+    #endif
 	
     TiXmlDocument xmlFile(pathCommands.c_str());
     commands EncodingCommands;
@@ -250,7 +252,15 @@ void mainForm::encodeVideo()
         widget.doublespinboxUserCutTimeStop->setEnabled(false);
         widget.pushbuttonEncode->setEnabled(false);
 
-        // Start to load commands
+        // Initialize logfile
+        addNewLineInLog(LogFile);
+        LogFile << "Take Your Pills Video Encoder version : " << softwareVersion;
+        #ifdef LINUX
+            LogFile << " (Linux)\n";
+        #endif
+        #ifdef WINDOWS
+            LogFile << " (Windows)\n";
+        #endif
         addNewLineInLog(LogFile);
         LogFile << "Starting to load \"config.xml\" file ...\n";
 
@@ -676,6 +686,11 @@ void generateCommand(command *commandCurrent,
         temp = pathApp + "/mp4box/mp4box.exe";
     #endif
     commandCurrent->software.replace(QString::fromStdString(tagInternalMP4box), temp);
+    temp = "";
+    
+    // Manage tag {internal.mp4box.temp}
+    temp = pathUserFileInput.section("/",0,-2);
+    commandCurrent->arguments.replaceInStrings(QString::fromStdString(tagInternalMP4boxTemp), temp);
     temp = "";
     
     // Manage tag {user.file.input}
